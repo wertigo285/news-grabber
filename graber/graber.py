@@ -89,7 +89,7 @@ class ArticleParser:
         '''
         Получить новость с сайта
         '''
-        base_url = self._get_base_url(url)    
+        base_url = self._get_base_url(url)
         soup = self._get_soup(url)
         article = soup.find(*self.article_mask) or soup
         title = self._get_title(soup)
@@ -119,12 +119,11 @@ class ArticleParser:
         with urlopen(url) as page:
             soup = BeautifulSoup(page, 'html.parser')
         return soup
-    
+
     @staticmethod
     def _get_base_url(url):
         external_level = url.count('/') - 2
         return urljoin(url, '.' * external_level)
-
 
 
 class RSSParser:
@@ -160,7 +159,7 @@ class RSSParser:
                 date = self.__get_date(article['published'])
                 # Фильтр по дате
                 if (start_date and date < start_date
-                    or end_date and date > end_date):
+                   or end_date and date > end_date):
                     continue
                 article['published'] = self.__format_date(date)
                 news.append(article)
@@ -176,9 +175,10 @@ class RSSParser:
         return result
 
     def __get_date(self, date_str):
-        return datetime.strptime(date_str, self.in_date_format)
-        
-    def __format_date(self, date):    
+        date = datetime.strptime(date_str, self.in_date_format)
+        return date.replace(tzinfo=None)
+
+    def __format_date(self, date):
         return date.strftime(self.out_date_format)
 
 
@@ -190,11 +190,11 @@ class Site:
         self.__rss_parser = RSSParser(config)
         self.__article_parser = ArticleParser(config['art_parser_config'])
 
-    def news(self, limit=0):
+    def news(self, limit=0, **kwargs):
         '''
         Получить список новостей RSS
         '''
-        return self.__rss_parser.news(limit)
+        return self.__rss_parser.news(limit, **kwargs)
 
     def grub(self, url):
         '''
