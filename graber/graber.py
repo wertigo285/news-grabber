@@ -155,30 +155,30 @@ class RSSParser:
             root = tree.getroot()
             for num, item in enumerate(root.iter('item'), 1):
                 article = {item.tag: item.text for item in list(item)}
-                article = self.__transform_article(article)
-                date = self.__get_date(article['published'])
+                article = self._transform_article(article)
+                date = self._get_date(article['published'])
                 # Фильтр по дате
                 if (start_date and date < start_date
                    or end_date and date > end_date):
                     continue
-                article['published'] = self.__format_date(date)
+                article['published'] = self._format_date(date)
                 news.append(article)
                 # Фильтр по лимиту записей
                 if limit and num >= limit:
                     break
         return news
 
-    def __transform_article(self, article):
+    def _transform_article(self, article):
         result = {}
         for raw_tag, tag in self.article_struct.items():
             result[tag] = article[raw_tag].strip()
         return result
 
-    def __get_date(self, date_str):
+    def _get_date(self, date_str):
         date = datetime.strptime(date_str, self.in_date_format)
         return date.replace(tzinfo=None)
 
-    def __format_date(self, date):
+    def _format_date(self, date):
         return date.strftime(self.out_date_format)
 
 
