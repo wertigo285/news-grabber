@@ -10,7 +10,7 @@ from urllib.parse import urljoin
     - rss_url: адрес RSS
     - art_parser_config: словарь с параметрами для парсера страниц новости
         Формат масок : ['тэг', {'аттрибут':'значение', ...}]
-        - article_mask: маска враппера статьи
+        - article_mask: маска враппера статьиSS
         - title_mask: маска враппера заголовка
         - image_mask: маска враппера изображения
         - text_mask: маска враппера текста статьи,
@@ -75,9 +75,7 @@ SITES = [
 
 
 class ArticleParser:
-    '''
-    Парсер статьи с сайта
-    '''
+    '''Парсер статьи с сайта.'''
     config_keys = ['article_mask', 'title_mask',
                    'image_mask', 'text_mask', 'parag_mask']
 
@@ -127,9 +125,7 @@ class ArticleParser:
 
 
 class RSSParser:
-    '''
-    Парсер RSS сайта
-    '''
+    '''Парсер RSS сайта.'''
     # Формат вывода новости
     article_struct = {
         'title': 'title',
@@ -144,9 +140,7 @@ class RSSParser:
         self.out_date_format = '%d.%m.%Y %H:%M'
 
     def news(self, limit=0, **kwargs):
-        '''
-        Получить список новостей RSS
-        '''
+        '''Получить список новостей RSS.'''
         news = []
         start_date = kwargs.get('start_date', None)
         end_date = kwargs.get('end_date', None)
@@ -183,30 +177,22 @@ class RSSParser:
 
 
 class Site:
-    '''
-   Класс-интерфейс для получения данных с сайта
-    '''
+    '''Класс-интерфейс для получения данных с сайта.'''
     def __init__(self, config):
         self.__rss_parser = RSSParser(config)
         self.__article_parser = ArticleParser(config['art_parser_config'])
 
     def news(self, limit=0, **kwargs):
-        '''
-        Получить список новостей RSS
-        '''
+        '''Получить список новостей RSS.'''
         return self.__rss_parser.news(limit, **kwargs)
 
     def grub(self, url):
-        '''
-        Получить новость с сайта
-        '''
+        '''Получить новость с сайта.'''
         return self.__article_parser.grub(url)
 
 
 class Graber:
-    '''
-    Класс-интерфейс для получения данных с сайтов
-    '''
+    '''Класс-интерфейс для получения данных с сайтов.'''
     def __init__(self):
         for site in SITES:
             setattr(self, site['name'], Site(site))
